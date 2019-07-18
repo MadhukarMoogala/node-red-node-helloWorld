@@ -1,0 +1,66 @@
+<script type="text/javascript">
+    /**
+     * A simple function to test the validity of Buckey nomenclature 
+    */
+
+    var NodeValidUtils = {};
+    NodeValidUtils.isBucketKeyValid = function (v) {
+        const regex = /^[-_.a-z0-9]{3,128}/;
+        var reg = new RegExp(regex);
+        var matches = reg.exec(v);
+        var isOk = reg.test(v);
+        if (matches != null) {
+            matches.forEach((m) => {
+                m = m.toString();
+                if (m.length === v.length) isOk = true;
+                else isOk = false;
+            });
+        }
+
+        return !v ? false : isOk;
+    }
+    RED.nodes.registerType('hello-world', {
+        category: 'function',
+        color: '#FFAAAA',
+        defaults: {
+            name: { value: "" },
+            bucketkey: {
+                value: "",
+                required: true,
+                validate: function (v) {
+                    debugger;
+                    var isOk = NodeValidUtils.isBucketKeyValid(v);
+                    if (!isOk) {
+                        alert("'bucketKey' must be of the form  [-_.a-z0-9]{3,128}");
+                        }
+                    
+                    return isOk;
+                }
+            },
+			hello :{value:""}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "hello-world.png", //40X60px
+        label: function () {
+            return this.name || "hello-world";
+        }
+    });
+</script>
+<script type="text/x-red" data-template-name="hello-world">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i>Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-bucketkey"><i class="icon-tag"></i>bucketkey</label>
+        <input type="text" id="node-input-bucketkey">
+    </div>
+    <div class="form-row">
+        <label for="node-input-hello"><i class="icon-tag"></i>Hello</label>
+        <input type="text" id="node-input-hello">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="hello-world">
+    <p>A simple node that greets you a "hello World!"</p>
+</script>
